@@ -2,8 +2,7 @@ import java.util.*;
 
 public class SearchEngine {
 
-    private List<String> findPersonStrategyALL(String searchWord, List<String> foundPeople, List<String> peopleList) {
-        String[] sw = searchWord.toLowerCase().split(" ");
+    private List<String> findPersonStrategyALL(String[] sw, List<String> foundPeople, List<String> peopleList) {
         for (String person : peopleList) {
             boolean containsAllWords = true;
             for (String word : sw) {
@@ -20,11 +19,10 @@ public class SearchEngine {
     }
 
     private List<String> findPersonStrategyANY(
-            String searchWord,
+            String[] sw,
             List<String> foundPeople,
             List<String> peopleList,
             Map<String, List<Integer>> peopleMap) {
-        String[] sw = searchWord.toLowerCase().split(" ");
         peopleMap.forEach((key, value) -> {
             for (String word : sw) {
                 if (key.contains(word.toLowerCase())) {
@@ -38,11 +36,11 @@ public class SearchEngine {
     }
 
     private List<String> findPersonStrategyNONE(
-            String searchWord,
+            String[] sw,
             List<String> foundPeople,
             List<String> peopleList,
             Map<String, List<Integer>> peopleMap) {
-        List<String> temp = findPersonStrategyANY(searchWord, foundPeople, peopleList, peopleMap);
+        List<String> temp = findPersonStrategyANY(sw, foundPeople, peopleList, peopleMap);
         List<String> all = new ArrayList<>(peopleList);
         all.removeAll(temp);
         return all;
@@ -54,10 +52,11 @@ public class SearchEngine {
             List<String> peopleList,
             Map<String, List<Integer>> peopleMap) {
         List<String> foundPeople = new ArrayList<>();
+        String[] sw = searchWord.toLowerCase().split(" ");
         switch (searchOption) {
-            case "ALL" -> foundPeople = findPersonStrategyALL(searchWord, foundPeople, peopleList);
-            case "ANY" -> foundPeople = findPersonStrategyANY(searchWord, foundPeople, peopleList, peopleMap);
-            case "NONE" -> foundPeople = findPersonStrategyNONE(searchWord, foundPeople, peopleList, peopleMap);
+            case "ALL" -> foundPeople = findPersonStrategyALL(sw, foundPeople, peopleList);
+            case "ANY" -> foundPeople = findPersonStrategyANY(sw, foundPeople, peopleList, peopleMap);
+            case "NONE" -> foundPeople = findPersonStrategyNONE(sw, foundPeople, peopleList, peopleMap);
         }
         return foundPeople;
     }
